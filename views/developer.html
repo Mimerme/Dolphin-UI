@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- This view is only meant to be launched to test the Dolphin Core -->
+<html>
+  <head>
+    <script src="../controllers/developer.js">
+
+    </script>
+    <meta charset="UTF-8">
+    <title>Test</title>
+  </head>
+  <body>
+    <h1>Test Area</h1>
+    <h2>Starts the Dolphin Core and logs the process output to stdout</h2>
+    <button onclick="startDolphin()">Start Core</button>
+    <h2>Hosts a Netplay Server</h2>
+    <button onclick="startNetPlay('host')">Start Netplay Host</button>
+    <h2>Join a Netplay Server</h2>
+      Netplay Code:<br>
+      <input type="text" name="netplay code" id="net_code"><br>
+      <button onclick="startNetPlay(document.getElementById('net_code').value)">
+        Join
+      </button>
+    <h2>Hook 'stock' memory address</h2>
+    <button onclick="logMemory()">Hook</button>
+    <h2>Open Websocket with Anther's</h2>
+    <button onclick="openSocket">open</button>
+    <h2>Download Dolphin Core</h2>
+    <button onclick="updateDolphinCore()">Download</button>
+    <h2>Send Host Code</h2>
+      Host Code:<br>
+      <input type="text" name="host code" id="host_code"><br>
+      <button onclick="sendHostCode(document.getElementById('host_code').value)">
+        Join
+      </button>
+  </body>
+</html>
