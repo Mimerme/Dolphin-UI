@@ -1,2 +1,5 @@
 node_modules
 config.json
+dolphincore
+config_b.json
+npm-debug*

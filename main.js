@@ -6,14 +6,80 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+const {
+  dialog
+} = require('electron')
+
+const fs = require("fs");
+const template = {
+  DolphinExecutable: "",
+  Session: "",
+  MeleeISO: "",
+  Data: "",
+  PerformanceScore: 0,
+  Hardware: []
+}
+
+function writeTemplate() {
+  fs.writeFile("config.json", JSON.stringify(template), {
+    flag: 'wx'
+  });
+}
+
+//Creates the config.json file
+fs.exists("config.json", function (exists) {
+  if (!exists) {
+    let response = dialog.showMessageBox({
+      title: "Automatic Setup",
+      type: "question",
+      message: "It seems as though your configuration file is missing. Would you like to run the automated setup?",
+      buttons: ["Yes", "No"],
+    });
+
+    switch (response) {
+      case 0:
+        //Ask for data directory
+        //Set performance score
+        //Get hardware specs
+        console.log("Asking for configuration");
+        autoConfig();
+        break;
+      case 1:
+        dialog.showMessageBox({
+          title: "You sure about that m8?",
+          type: "question",
+          message: "Without the configuration file there will be a slew of errors. It's expected that you manually configure the application."
+        });
+        break;
+    }
+
+
+  }
+});
+
+
+function autoConfig() {
+  let response = dialog.showOpenDialog({
+    title: "Set the application data directory",
+    defaultPath: __dirname,
+    properties: ["openDirectory"],
+  });
+  template.DolphinExecutable = response[0] + "\\dolphincore\\Dolphin.exe"
+  template.MeleeISO = response[0] + "\\games\\melee.iso"
+  template.Data = response[0];
+  writeTemplate();
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
