@@ -9,16 +9,45 @@ var process;
 var DOLPHIN_RUNNING = false;
 var NETPLAY_CONNECTED = false;
 var NETPLAY_CONNECTING = false;
+var WEBSOCKET = null;
+var NETPLAY_HOST_CODE = "";
 
+//Turn off during release
+const LOG_CORE_OUTPUT = true;
+
+//Detect which version of Melee
 const knownChecksums = {
-    "MeleeNTSC10": "",
-    "MeleeNTSC101": "",
-    "MeleeNTSC102": "",
-    "MeleePAL10": "",
+    "MeleeNTSC10": "3a62f8d10fd210d4928ad37e3816e33c",
+    "MeleeNTSC101": "67136bd167b471e0ad72e98d10cf4356",
+    "MeleeNTSC102": "0e63d4223b01d9aba596259dc155a174",
+    "MeleePAL": "5e118fc2d85350b7b092d0192bfb0f1a",
+    "MeleeNTSCJ": "dc07abd4b6a5e1517da575274ceefcf8"
 }
+
+var AUTHENTICATING = false;
 
 //Basic implementation of all crucial functions
 console.log("Enter Developer View");
+
+function testAuthenticate(){
+    AUTHENTICATING = true;
+    startNetPlay("host");
+}
+
+//Sends a simple post request with an identifier
+function authenticate(netplay_code){
+     let auth = request.post('https://www.smashladder.com/apiv1/dolphin_host', {form:{host_code: netplay_code}},
+     function(err, response, body){
+        if(JSON.parse(body).success){
+            console.log("Authentication response OK");
+        }
+        else{
+            console.log(err);
+            console.log(response);
+            console.log(body);
+        }
+     }); 
+}
 
 function startNetPlay(netplay_code) {
     console.log("Starting Netplay : " + netplay_code);
@@ -60,21 +89,40 @@ function downloadMelee() {
 
 }
 
+function quitDolphin(){
+    process.kill('SIGKILL');
+}
+
 //Callback for whenever the Dolphin core prodces stdout
 function onCoreOutput(data) {
     //Removes the timestamp from the buffer
-    let output = data.slice(13, data.length).toString();
-    switch (output) {
-        case "Dolphin Launched":
+    let output = data.slice(12, data.length).toString();
+    if(LOG_CORE_OUTPUT)
+        console.log(output);
+    
+        if(output == "Dolphin Launched")
             dolphinRunning = true;
-            break;
+        else if(output.includes("Host Code ")){
+            let code = output.substring(10, output.length);
+            if(AUTHENTICATING){
+                AUTHENTICATING = false;
+                authenticate(code);
+                quitDolphin();
+            }
+        }
     }
-}
+
 
 function testHash(){
-    console.log("asdsd");
     getHash("D:\\Windows2\\Games\\M\\melee.iso", function(hash){
         console.log(hash);
+	for(checksum in knownChecksums){
+	  if(knownChecksums[checksum] == hash){
+          console.log("ISO is " + checksum);
+          return;
+      }
+     }
+     console.log("Unknown ISO");
     });
 }
 
@@ -116,9 +164,13 @@ function startDolphin(args) {
     });
 }
 
+function intializeWebsocket(){
+
+}
+
 //Sends the host code
 function sendHostCode() {
-
+  
 }
 
 //When the host code is recieved
