@@ -1,5 +1,5 @@
 const ws = require("nodejs-websocket");
-var SOCKET_CONNECTION = false;
+var SOCKET_CONNECTION = false, connection;
 
 module.exports = class SmashLadderSocket{
     constructor(path, session){
@@ -8,7 +8,7 @@ module.exports = class SmashLadderSocket{
     }
 
     connect(){
-        let connection = (ws.connect("wss://www.smashladder.com/?type=5"));
+        connection = (ws.connect(path));
         
         connection.on("pong", function(data){
             console.log("Pong: " + data);
@@ -19,14 +19,16 @@ module.exports = class SmashLadderSocket{
         });
 
         connection.on("text", function(msg){
-            switch(msg){
-                
-            }
+           parseResponse(msg); 
         });
 
     }
     disconnect(){}
-    parseResponse(){}
+    parseResponse(text){
+        let data = JSON.parse(text);
+        let functionCall = data.functionCall;
+        let parameters = data.parameters;
+    }
     error(){}
     startMatchSearch(){}
     stopMatchSearch(){}
