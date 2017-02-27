@@ -4,6 +4,7 @@ var request = require('request');
 var fs = require('fs');
 var cryp = require('crypto');
 const unzip = require('unzip');
+const SmashLadderSocket = require("../components-core/smashladdersocket.js");
 
 var process;
 var DOLPHIN_RUNNING = false;
@@ -164,8 +165,8 @@ function startDolphin(args) {
     });
 }
 
-function intializeWebsocket(){
-
+function openSocket(){
+    new SmashLadderSocket("test", "test");
 }
 
 //Sends the host code

@@ -19,5 +19,8 @@
   "devDependencies": {
     "electron": "^1.4.1",
     "request": "^2.79.0"
+  },
+  "dependencies": {
+    "nodejs-websocket": "^1.7.1"
   }
 }
