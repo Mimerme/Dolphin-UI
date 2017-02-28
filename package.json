@@ -21,6 +21,7 @@
     "request": "^2.79.0"
   },
   "dependencies": {
-    "nodejs-websocket": "^1.7.1"
+    "nodejs-websocket": "^1.7.1",
+    "unzip": "^0.1.11"
   }
 }

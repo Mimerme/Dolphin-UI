@@ -3,7 +3,7 @@ const request = require('request');
 const fs = require('fs');
 const cryp = require('crypto');
 
-modules.exports = class CoreInterface{
+module.exports = class CoreInterface{
     constructor(executableLocation)
     {
         this.LOG_CORE_OUTPUT = true;
@@ -11,10 +11,18 @@ modules.exports = class CoreInterface{
         this.DOLPHIN_RUNNING = false;
         this.process;
         this.executable = executableLocation;
-        //Register's functions to the socket
+        //Register callable functions
         this.functionCalls = {
-            "startNetplay", startNetplay 
+            "startNetplay": startNetplay,
+            "quitDolphin": quitDolphin
         };
+    }
+
+    
+
+    //NOTE: Arguments must be passed as an array
+    callFunction(functionName, functionArguments){
+        this.functionCalls[functionName](functionArguments)
     }
 
     //Pasted from developer.js, needs testing
@@ -30,7 +38,7 @@ modules.exports = class CoreInterface{
             let code = output.substring(10, output.length);
             if(this.AUTHENTICATING){
                 this.AUTHENTICATING = false;
-                authenticate(code);
+                sendAuthenticationRequest(code);
                 quitDolphin();
             }
         }
@@ -41,7 +49,7 @@ modules.exports = class CoreInterface{
         this.DOLPHIN_RUNNING = false;
     }
 
-    authenticate(netplay_code){
+    sendAuthenticationRequest(netplay_code){
      this.AUTHENTICATING = true;
      let auth = request.post('https://www.smashladder.com/apiv1/dolphin_host', {form:{host_code: netplay_code}},
      function(err, response, body){
@@ -56,9 +64,14 @@ modules.exports = class CoreInterface{
      }); 
     }
 
-    startNetPlay(netplay_code) {
-        console.log("Starting Netplay : " + netplay_code);
-        startDolphin(["/n " + netplay_code]);
+    beginAuthentication(){
+        this.AUTHENTICATING = true;
+        startNetplay("host");
+    }
+
+    startNetplay(netplay_code){
+        console.log("Starting Netplay : " + netplay_code[0]);
+        startDolphin(["/n " + netplay_code[0]]);
     }
 
     startDolphin(args) {

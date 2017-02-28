@@ -16,17 +16,20 @@ var NETPLAY_HOST_CODE = "";
 
 var smashLadderSocket, coreInterface;
 
-intialize();
+initalize();
 
 //Called when the controller is started
 function initalize(){
-   coreInterface = new SCoreInterface(config.DolphinExecutable);
-   //TODO: Replace the placeholder session with a real session id
-    smashLadderSocket = new smashLadderSocket("wss://www.smashladder.com?type=5", "placeholder");
+    coreInterface = new CoreInterface(config.DolphinExecutable);
+    //TODO: Replace the placeholder session with a real session id
+    smashLadderSocket = new SmashLadderSocket("wss://www.smashladder.com?type=5", "placeholder", coreInterface);
+    smashLadderSocket.connect();
 }
 
 //Called when the user needs to generate a session
- function authenticate(){}
+function authenticate(){
+    coreInterface.beginAuthentication();
+}
 
 //Starts netplay: pass 'host' as the room id to host a server
  function startNetplay(roomID){}
