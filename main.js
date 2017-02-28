@@ -26,37 +26,6 @@ function writeTemplate() {
   });
 }
 
-//Creates the config.json file
-fs.exists("config.json", function (exists) {
-  if (!exists) {
-    let response = dialog.showMessageBox({
-      title: "Automatic Setup",
-      type: "question",
-      message: "It seems as though your configuration file is missing. Would you like to run the automated setup?",
-      buttons: ["Yes", "No"],
-    });
-
-    switch (response) {
-      case 0:
-        //Ask for data directory
-        //Set performance score
-        //Get hardware specs
-        console.log("Asking for configuration");
-        autoConfig();
-        break;
-      case 1:
-        dialog.showMessageBox({
-          title: "You sure about that m8?",
-          type: "question",
-          message: "Without the configuration file there will be a slew of errors. It's expected that you manually configure the application."
-        });
-        break;
-    }
-
-
-  }
-});
-
 
 function autoConfig() {
   let response = dialog.showOpenDialog({
@@ -83,7 +52,7 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './views/developer.html'),
+    pathname: path.join(__dirname, './views/dev_modules.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -95,6 +64,37 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+
+    //Creates the config.json file
+    fs.exists("config.json", function (exists) {
+    if (!exists) {
+        let response = dialog.showMessageBox({
+            title: "Automatic Setup",
+            type: "question",
+            message: "It seems as though your configuration file is missing. Would you like to run the automated setup?",
+            buttons: ["Yes", "No"],
+        });
+
+    switch (response) {
+      case 0:
+        //Ask for data directory
+        //Set performance score
+        //Get hardware specs
+        console.log("Asking for configuration");
+        autoConfig();
+        break;
+      case 1:
+        dialog.showMessageBox({
+          title: "You sure about that m8?",
+          type: "question",
+          message: "Without the configuration file there will be a slew of errors. It's expected that you manually configure the application."
+        });
+        break;
+    }
+
+  }
+});
 }
 
 // This method will be called when Electron has finished
