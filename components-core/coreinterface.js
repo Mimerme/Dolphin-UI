@@ -13,8 +13,8 @@ module.exports = class CoreInterface{
         this.executable = executableLocation;
         //Register callable functions
         this.functionCalls = {
-            "startNetplay": startNetplay,
-            "quitDolphin": quitDolphin
+            "startNetplay": this.beginNetplay,
+            "quitDolphin": this.quitDolphin
         };
     }
 
@@ -66,10 +66,10 @@ module.exports = class CoreInterface{
 
     beginAuthentication(){
         this.AUTHENTICATING = true;
-        startNetplay("host");
+        beginNetplay("host");
     }
 
-    startNetplay(netplay_code){
+    beginNetplay(netplay_code){
         console.log("Starting Netplay : " + netplay_code[0]);
         startDolphin(["/n " + netplay_code[0]]);
     }
