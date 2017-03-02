@@ -66,12 +66,12 @@ module.exports = class CoreInterface{
 
     beginAuthentication(){
         this.AUTHENTICATING = true;
-        beginNetplay("host");
+        this.beginNetplay(["host"]);
     }
 
     beginNetplay(netplay_code){
         console.log("Starting Netplay : " + netplay_code[0]);
-        startDolphin(["/n " + netplay_code[0]]);
+        this.startDolphin(["/n " + netplay_code[0]]);
     }
 
     startDolphin(args) {
@@ -79,7 +79,7 @@ module.exports = class CoreInterface{
            detached: false
         });
 
-        this.process.stdout.on('data', onCoreOutput);
+        this.process.stdout.on('data', this.onCoreOutput);
 
         this.process.on('error', (err) => {
             console.log('Failed to start Dolphin...');
