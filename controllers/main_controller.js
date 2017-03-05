@@ -19,23 +19,30 @@ var smashLadderSocket, coreInterface;
 initalize();
 
 //Called when the controller is started
-function initalize(){
-    coreInterface = new CoreInterface(config.DolphinExecutable);
-    //TODO: Replace the placeholder session with a real session id
-    smashLadderSocket = new SmashLadderSocket("wss://www.smashladder.com?type=5", "placeholder", coreInterface);
-    smashLadderSocket.connect();
+function initalize() {
+    if (!config.LoggedIn) {
+        coreInterface = new CoreInterface(config.DolphinExecutable);
+        //TODO: Replace the placeholder session with a real session id
+        smashLadderSocket = new SmashLadderSocket("wss://www.smashladder.com/?type=5", config.Session, config.playerID, coreInterface);
+        smashLadderSocket.connect();
+    }
 }
 
 //Called when the user needs to generate a session
-function authenticate(){
+function authenticate() {
     coreInterface.beginAuthentication();
 }
 
+//Call this function after authenticating
+function getUserData(){
+    coreInterface.getUserData();
+}
+
 //Starts netplay: pass 'host' as the room id to host a server
- function startNetplay(roomID){}
+function startNetplay(roomID) {}
 
 //Log the memory addresses of 'stocks' to the console
- function logMemory(){}
+function logMemory() {}
 
- //Test the hash with known Melee versions
- function testHash(){}
+//Test the hash with known Melee versions
+function testHash() {}

@@ -13,7 +13,9 @@ const {
 const fs = require("fs");
 const template = {
   DolphinExecutable: "",
+  LoggedIn: false,
   Session: "",
+  PlayerID: "",
   MeleeISO: "",
   Data: "",
   PerformanceScore: 0,
@@ -111,7 +113,7 @@ app.on('window-all-closed', function () {
   }
 })
 
-app.on('activate', function () {
+app.in('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
